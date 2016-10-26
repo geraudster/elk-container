@@ -4,18 +4,33 @@ services:
      image: logstash
      volumes:
        - ./logstash:/config-dir
-     command: [ -f, /config-dir/logstash.conf ]
+     command: [ -f, /config-dir/logstash.conf, --allow-env ]
      depends_on:
        - elasticsearch
+     environment:
+       - CONSUMER_KEY
+       - CONSUMER_SECRET
+       - OAUTH_TOKEN
+       - OAUTH_TOKEN_SECRET
 
    elasticsearch:
      image: elasticsearch
+     volumes:
+      - ../elk-container-data/esdata:/usr/share/elasticsearch/data
 
    kibana:
-     image: kibana
-     environment:
-       ELASTICSEARCH_URL: http://elasticsearch:9200
-     ports:
-       - "5601:5601"
+     build: kibana-custom
      depends_on:
        - elasticsearch
+     environment:
+       ELASTICSEARCH_URL: http://elasticsearch:9200
+
+   nginx:
+     image: nginx:alpine
+     volumes:
+      - ./nginx-ssl.conf:/etc/nginx/conf.d/nginx-ssl.conf:ro
+      - ../elk-container-data/ssl:/etc/nginx/ssl:ro
+      - ../elk-container-data/htpasswd:/etc/nginx/htpasswd:ro
+     ports:
+       - "8443:443"
+
