@@ -23,27 +23,35 @@ __Pre-requisite__: [Docker Compose](https://docs.docker.com/compose/) must be in
 
 1. Clone this repository
 2. Create a .env file in newly created directory with following environment variables defining your Twitter credentials:
-```bash
-CONSUMER_KEY=...
-CONSUMER_SECRET=...
-OAUTH_TOKEN=...
-OAUTH_TOKEN_SECRET=...
-```
+
+    ```bash
+    CONSUMER_KEY=...
+    CONSUMER_SECRET=...
+    OAUTH_TOKEN=...
+    OAUTH_TOKEN_SECRET=...
+    ```
+
 3. Create a _../elk-container-data_ directory
 4. Create key pair for Nginx
-```bash
-mkdir -p ../elk-container-data/ssl
-openssl req -batch -x509 -nodes -days 365 -newkey rsa:2048 \
-            -keyout ../elk-container-data/nginx.key \
-            -out ../elk-container-data/nginx.crt
-```
+
+    ```bash
+    mkdir -p ../elk-container-data/ssl
+    openssl req -batch -x509 -nodes -days 365 -newkey rsa:2048 \
+                -keyout ../elk-container-data/nginx.key \
+                -out ../elk-container-data/nginx.crt
+    ```
+
 5. Create a password
-```bash
+
+    ```bash
     htpasswd -c ../elk-container-data/htpasswd <username> <password>
-```
+    ```
+
 6. Launch docker-compose
-```bash
+
+    ```bash
     docker-compose up -d
-```
+    ```
+
 7. Open Kibana at https://localhost:8443/kibana
 8. Enjoy!
